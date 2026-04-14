@@ -9,9 +9,9 @@ namespace SchoolApp.Services
     {
         Task<User?> VerifyAndGetUserAsync(UserLoginDTO credentials);
 
-        Task<UserReadOnlyDTO> GetUserByUsername(string username);
+        Task<UserReadOnlyDTO> GetUserByUsernameAsync(string username);
 
         Task<PaginatedResult<UserReadOnlyDTO>> GetPaginatedUsersFilteredAsync(
-            int pageSize, UserFiltersDTO userFiltersDTO);
+            int pageNumber, int pageSize, UserFiltersDTO userFiltersDTO);
     }
 }

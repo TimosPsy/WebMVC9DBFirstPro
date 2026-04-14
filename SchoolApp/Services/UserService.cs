@@ -6,10 +6,12 @@ using SchoolApp.Exceptions;
 using SchoolApp.Models;
 using SchoolApp.Repositories;
 using SchoolApp.Security;
+using System.Resources;
 using System.Linq.Expressions;
 
+
 namespace SchoolApp.Services
-{  
+{
     public class UserService : IUserService
     {
         private readonly IEncryptionUtil _encryptionUtil;
@@ -17,7 +19,7 @@ namespace SchoolApp.Services
         private readonly IMapper _mapper;
         private readonly ILogger<UserService> _logger;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, 
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper,
             ILogger<UserService> logger, IEncryptionUtil encryptionUtil)
         {
             _encryptionUtil = encryptionUtil;
@@ -45,7 +47,7 @@ namespace SchoolApp.Services
                 predicates.Add(u => u.Role.Name == userFiltersDTO.UserRole);
             }
 
-            var result = await _unitOfWork.UserRepository.GetUsersAsync(pageNumber, pageSize, 
+            var result = await _unitOfWork.UserRepository.GetUsersAsync(pageNumber, pageSize,
                 predicates);
 
             var dtoResult = new PaginatedResult<UserReadOnlyDTO>()
@@ -60,6 +62,7 @@ namespace SchoolApp.Services
             return dtoResult;
         }
 
+
         public async Task<UserReadOnlyDTO?> GetUserByUsernameAsync(string username)
         {
             try
@@ -67,16 +70,16 @@ namespace SchoolApp.Services
                 User? user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(username);
                 if (user == null)
                 {
-                    throw new EntityNotFoundException("User", "User with username: " + 
+                    throw new EntityNotFoundException("User", "User with username: " +
                         " not found");
                 }
-                
+
                 _logger.LogInformation("User found: {Username}", username);
                 return _mapper.Map<UserReadOnlyDTO>(user);
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogError("Error retrieving user by username: {Username}. {Message}", 
+                _logger.LogError("Error retrieving user by username: {Username}. {Message}",
                     username, ex.Message);
                 throw;
             }
@@ -89,13 +92,13 @@ namespace SchoolApp.Services
             {
                 user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(credentials.Username!);
 
-                if (user == null || !_encryptionUtil.IsValidPassword(credentials.Password!, 
+                if (user == null || !_encryptionUtil.IsValidPassword(credentials.Password!,
                     user.Password))
                 {
                     throw new EntityNotAuthorizedException("User", Resources.ErrorMessages.BadCredentials);
                 }
 
-                _logger.LogInformation("User with username {Username} verified for login", 
+                _logger.LogInformation("User with username {Username} verified for login",
                     credentials.Username!);
             }
             catch (EntityNotAuthorizedException e)
