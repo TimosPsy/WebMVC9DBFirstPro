@@ -8,5 +8,7 @@
             : base(code + DEFAULT_CODE, message)
         {
         }
+
+      
     }
 }
