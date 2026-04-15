@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SchoolApp.Core;
 using SchoolApp.DTO;
 using SchoolApp.Services;
@@ -16,18 +17,21 @@ namespace SchoolApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Teacher")]
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Signup()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Signup(TeacherSignupDTO teacherSignupDTO)
         {
             if (!ModelState.IsValid)
