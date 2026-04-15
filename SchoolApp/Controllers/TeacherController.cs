@@ -17,7 +17,7 @@ namespace SchoolApp.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "TEACHER")]
         public IActionResult Index()
         {
             return View();
